@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../screens/meal_detail_screen.dart';
 import '../models/meal.dart';
 
@@ -9,15 +10,16 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
+  final Function removeItem;
 
-  MealItem({
-    @required this.id,
-    @required this.title,
-    @required this.imageUrl,
-    @required this.duration,
-    @required this.complexity,
-    @required this.affordability,
-  });
+  MealItem(
+      {@required this.id,
+      @required this.title,
+      @required this.imageUrl,
+      @required this.affordability,
+      @required this.complexity,
+      @required this.duration,
+      @required this.removeItem});
 
   String get complexityText {
     switch (complexity) {
@@ -35,7 +37,7 @@ class MealItem extends StatelessWidget {
     }
   }
 
-  String get affordAbilityText {
+  String get affordabilityText {
     switch (affordability) {
       case Affordability.Affordable:
         return 'Affordable';
@@ -44,7 +46,7 @@ class MealItem extends StatelessWidget {
         return 'Pricey';
         break;
       case Affordability.Luxurious:
-        return 'Luxurious';
+        return 'Expensive';
         break;
       default:
         return 'Unknown';
@@ -52,7 +54,16 @@ class MealItem extends StatelessWidget {
   }
 
   void selectMeal(BuildContext context) {
-    Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: id);
+    Navigator.of(context)
+        .pushNamed(
+      MealDetailScreen.routeName,
+      arguments: id,
+    )
+        .then((result) {
+      if (result != null) {
+        removeItem(result);
+      }
+    });
   }
 
   @override
@@ -66,9 +77,9 @@ class MealItem extends StatelessWidget {
         elevation: 4,
         margin: EdgeInsets.all(10),
         child: Column(
-          children: [
+          children: <Widget>[
             Stack(
-              children: [
+              children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
@@ -87,7 +98,10 @@ class MealItem extends StatelessWidget {
                   child: Container(
                     width: 300,
                     color: Colors.black54,
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 5,
+                      horizontal: 20,
+                    ),
                     child: Text(
                       title,
                       style: TextStyle(
@@ -105,9 +119,9 @@ class MealItem extends StatelessWidget {
               padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
+                children: <Widget>[
                   Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.schedule,
                       ),
@@ -118,7 +132,7 @@ class MealItem extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.work,
                       ),
@@ -129,19 +143,19 @@ class MealItem extends StatelessWidget {
                     ],
                   ),
                   Row(
-                    children: [
+                    children: <Widget>[
                       Icon(
                         Icons.attach_money,
                       ),
                       SizedBox(
                         width: 6,
                       ),
-                      Text(affordAbilityText),
+                      Text(affordabilityText),
                     ],
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
